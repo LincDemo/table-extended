@@ -7,10 +7,12 @@ const Export2PDFHack = (plugin: TableExtended) => {
   const unloaders = [
     around(MarkdownView.prototype, {
       // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+      // Eslint禁用下一行，偏向箭头/偏向箭头函数
       printToPdf: (original) =>
         function (this: MarkdownView) {
           plugin.print2pdfFileCache = this.file;
           // shalow copy the file to provide basic info
+          // 复制文件以提供基本信息
           this.file = { ...this.file, export2pdf: true } as any;
           original.call(this);
           this.file = plugin.print2pdfFileCache;
@@ -38,6 +40,7 @@ const Export2PDFHack = (plugin: TableExtended) => {
 
 /**
  * warp all tables in markdown text with tx codeblock
+ * 扭曲所有表markdown文本与tx码块
  */
 const preprocessMarkdown = (text: string, plugin: TableExtended) => {
   if (!text) return text;
@@ -58,11 +61,13 @@ const preprocessMarkdown = (text: string, plugin: TableExtended) => {
           allTokens[paraContent].content === "-tx-"
         ) {
           // remove -tx- prefix
+          // 移除 -tx- 前缀
           linesToRemove.push(token.map![0] - 1);
           txTable = true;
         }
       }
       // process all tables or only tables with -tx- prefix
+      // 处理所有表或仅处理带有-tx- prefix的表
       if (plugin.settings.handleNativeTable || txTable) {
         tableStarts.push(token.map![0]);
         tableEnds.push(token.map![1]);
